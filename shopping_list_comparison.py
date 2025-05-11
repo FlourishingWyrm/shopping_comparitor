@@ -1,21 +1,29 @@
+# opens the file (database)
 file = open("data.txt", "r")
 data = file.read()
 data = data.translate("")
 full_file = []
 dataname = []
 datacost = []
-dataweight = []
+datarating = []
+dataresponse = []
 ticker = 0
 list_tracker = 0
 tempword = ""
 current_item_index = 0
+# runs until the intended end of the file
 while not data[ticker] == "=":
+    # breaks up each item
     if data[ticker] == "," and not data[ticker] == "=":
         ticker += 1
+        # runs untill the next break
         while not data[ticker] == "," and not data[ticker] == "=":
+            # ignores the quotes
             if not data[ticker] == "'":
+                # adds the char to the temp word
                 tempword = tempword + data[ticker]
             ticker += 1
+        # sorts the temp word
         if list_tracker == 0:
             dataname.append(tempword)
             list_tracker += 1
@@ -23,9 +31,13 @@ while not data[ticker] == "=":
             tempword = float(tempword)
             datacost.append(tempword)
             list_tracker += 1
-        else:
+        elif list_tracker == 2:
             tempword = float(tempword)
-            dataweight.append(tempword)
+            datarating.append(tempword)
+            list_tracker +=1
+        else:
+            tempword = int(tempword)
+            dataresponse.append(tempword)
             list_tracker = 0
         tempword = ""
 
@@ -116,13 +128,20 @@ def num_checker(question, type="float", accepted=[]):
         except ValueError:
             print(error)
 
-def weight_conv(question):
 
 
-print(dataweight)
-                            # _______________________welcome crap________________________________
-# boot_up = string_checker("what mode would you like to boot up in? ",["baby","dev","standard"],["baby","dev","standard"])
+
+
+print(datarating)
+# this is because you wanted comments...
+
+
+#this lets users add a review
+if string_checker("would you like to review an item or start shopping",["yes","no"],[True,False]):
+
+    # this is for users to name the item in the list it is usefull to me as i can check the item against the database
 freud = input("name of item")
+# varible setup after the file is read
 current_name = ""
 item_price = 0
 item_weight = 0
@@ -130,7 +149,7 @@ temperary_overwriteable = ""
 if freud in dataname:
     current_item_index = dataname.index(freud)
     item_price = datacost[current_item_index]
-    item_weight = dataweight[current_item_index]
+    item_weight = datarating[current_item_index]
     if string_checker(f"the name that was entered already matches our database is this accurate:"
         f"\n(Cost: {item_price} Weight: {item_weight})", ["yes", "no"], [True, False]):
         current_item_index = dataname.index(freud)
@@ -147,20 +166,19 @@ if freud in dataname:
             f"what is the correct weight, press enter if {item_weight} is already correct", accepted=[""])
         if not temperary_overwriteable == "":
             item_weight = temperary_overwriteable
-            dataweight[current_item_index] = temperary_overwriteable
+            datarating[current_item_index] = temperary_overwriteable
 
 
 else:
     print("this item was not found in our database, to ensure more accurate results please fill out the data...")
     item_price = num_checker("please enter the correct item price")
-    item_weight = weight_conv()
 
 ticker = 0
 
 for item in dataname:
     full_file.append(item)
     full_file.append(datacost[ticker])
-    full_file.append(dataweight[ticker])
+    full_file.append(datarating[ticker])
     ticker += 1
     print(full_file)
 write_the_file(full_file)
