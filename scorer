@@ -1,0 +1,5 @@
+def scorer(cost,weight,rating,rating_reviewers):
+    """creates a score based on cost and reviews"""
+    cost = cost/weight
+    rating = rating/rating_reviewers
+    return round(((rating / (cost * (((cost + 5 - rating)) * 2))) * 100000),3)
