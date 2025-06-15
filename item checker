@@ -1,0 +1,15 @@
+def we_found_the_item(name):
+    """to be used if an item matches the database used to double-check that the data is correct if not will fix it"""
+    index = raw_name.index(name)
+    cost = raw_cost[index]
+    weight = raw_weight[index]
+    rating = raw_rating[index]
+    review_num = raw_review_num[index]
+    # continues if the data is true gets the user to correct it if false
+    if not string_checker(
+            F"excellent news we found {name} in our database we just wish to confirm that this data is correct \n"
+            F"is the cost of {name} is {currency(cost)} and {name} weighs {weight}kgs "):
+        raw_cost[indexer] = (num_checker("please enter the cost as a number ignoring the $ "))
+        raw_weight[indexer] = (
+            num_checker("please enter the weight if you ignore the units it will be assumed as (kg) "))
+        print("The item has been updated")
