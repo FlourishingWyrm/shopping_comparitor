@@ -1,0 +1,29 @@
+def num_checker(question, type="float",max = ""):
+    """this checks integers are above min value (0) and below either anything or five and also converts it to float or string to test.
+    Do not fret that having a number as max will underline in yellow this is the computer thinking that it knows best, it is wrong of course"""
+    error = F"please enter a {type} that is above 0"
+    if not max == "":
+        error+= F" and below {max}"
+
+    while True:
+        value = input(question).strip("$")
+        # special case for grams can cause error with the fact that a user could enter the wrong number with g
+        if "g" in value.lower():
+            value = weight_conv(value)
+
+
+        try:
+            if type == "float":
+                value = float(value)
+            elif type == "int":
+                value = int(value)
+            if max == "":
+                if value > 0:
+                    return value
+            elif 0 < value <= max:
+                return value
+            print(error)
+
+
+        except ValueError:
+            print(error)
