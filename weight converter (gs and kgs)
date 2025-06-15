@@ -1,0 +1,18 @@
+def weight_conv(weight):
+    """converts grams to kilograms"""
+    weight = weight.lower()
+    if not "k" in weight and "g" in weight:
+        try:
+            # removes the unnecessary text
+            weight = weight.strip("g")
+            # gets a float
+            weight = float(weight)
+            # makes it kgs equivalent
+            weight /= 1000
+        # returns a fail if it's a fail causing the user to try again
+        except ValueError:
+            return "Fail"
+    else:
+        weight = weight.strip("kg")
+        weight = float(weight)
+    return weight
