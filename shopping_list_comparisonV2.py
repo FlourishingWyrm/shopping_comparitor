@@ -2,7 +2,7 @@ import pandas
 
 
 def string_checker(question,ans=["yes","no"]):
-    """The most basic yes no checker"""
+    """The most basic yes no checker please ignore the yellow lines the computer doesn't know what it's on about"""
     while True:
         # gets the user response and makes it lowercase
         user_response = input(question).lower()
@@ -91,7 +91,7 @@ def new_data(name):
     print(
     F"we have not seen {name} yet so we need you to please fill out this "
     F"form before rating this product")
-    raw_name.append(item_name)
+    raw_name.append(name)
     raw_cost.append(num_checker("please enter the cost "))
     raw_weight.append(num_checker("please enter the weight if you ignore the units it will be assumed as (kg) "))
     
@@ -110,10 +110,6 @@ def we_found_the_item(name):
         raw_weight[indexer] = (
             num_checker("please enter the weight if you ignore the units it will be assumed as (kg) "))
         print("The item has been updated")
-# opens the file (database)
-file = open("data.txt", "r")
-data = file.read()
-data = data.replace("=","") + "="
 
 # all the raw data extracted from the data.txt file
 updated_data = []
@@ -151,6 +147,11 @@ temp_word = ""
 # used to decide what raw list to put our raw data while a ticker was needed elsewhere in use
 sorter = 0
 
+
+# opens the file (database)
+file = open("data.txt", "r")
+data = file.read()
+data = data.replace("=","") + "="
 
 # runs until the intended end of the file the location of =
 while not data[t] == "=":
@@ -192,6 +193,11 @@ while not data[t] == "=":
             # sets the sorter back to zero as that will return the cycle back to the name
             sorter = 0
         temp_word = ""
+for item in raw_name:
+    indexer = raw_name.index(item)
+    print(f"{item}: \n cost: {raw_cost[indexer]}\nweight: {raw_weight[indexer]}kg\nrating: {raw_rating[indexer]}\n last: {raw_review_num[indexer]}")
+    print()
+
 
 print("welcome to bang for buck\na tool for shopping support")
 print(F"This tool is used to give you the highest quality items based on rating and cost per unit from your personal shopping list\n")
@@ -210,7 +216,7 @@ while string_checker("would you like to support this app by reviewing a product 
         item_rating = raw_rating[indexer]
         item_review_num = raw_review_num[indexer]
         # shows the current rating
-        print(F"thank you for taking your time to review {item_name} its current review is {item_rating/item_review_num} out of 5")
+        print(F"thank you for taking your time to review {item_name} its current review is {round(item_rating/item_review_num,2)} out of 5")
         # nabs the review and increments
         item_rating += num_checker("please enter your review ",type="int",max=5)
         item_review_num += 1
@@ -263,7 +269,7 @@ else:
     print("great choice")
     # runs until out of items
     while not item_name == "quit":
-        item_name = input("please enter a food item for your cart or type quit to quit ")
+        item_name = input("please enter a food item for your cart or type quit to quit ").replace(",","")
         # catches lack of items
         while item_name == "" or (item_name == "quit" and shop_list == []):
             item_name = input("please actually enter somthing ")
@@ -336,7 +342,7 @@ if shop_list == []:
 else:
     # prints the dataframe
     print("\n\n\n",pandas.DataFrame(user_best_list))
-    print(f"\nTotal:                       {total}")
+    print(f"\nTotal:                       {currency(total)}")
 
 t = 0
 # updates the data
