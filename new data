@@ -1,0 +1,8 @@
+def new_data(name):
+    """gets the user to add an item to the database (only gets name, weight and cost)"""
+    print(
+    F"we have not seen {name} yet so we need you to please fill out this "
+    F"form before rating this product")
+    raw_name.append(name)
+    raw_cost.append(num_checker("please enter the cost "))
+    raw_weight.append(num_checker("please enter the weight if you ignore the units it will be assumed as (kg) "))
