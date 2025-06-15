@@ -1,0 +1,13 @@
+def string_checker(question,ans=["yes","no"]):
+    """The most basic yes no checker please ignore the yellow lines the computer doesn't know what it's on about"""
+    while True:
+        # gets the user response and makes it lowercase
+        user_response = input(question).lower()
+        # checks for first item in list or first character in first item
+        if user_response == ans[0] or user_response == ans[0][0]:
+            return True
+        # same for second
+        elif user_response == ans[1] or user_response == ans[1][0]:
+            return False
+        else:
+            print(F"sorry please answer with either {str(ans).strip('[]')}")
