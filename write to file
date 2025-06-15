@@ -1,0 +1,6 @@
+def write_the_file(text):
+    """writes to the file (data in this case)"""
+    text = str(text)
+    text = text.strip("[]")
+    text = "," + text
+    open("data.txt", "w+").write(text)
