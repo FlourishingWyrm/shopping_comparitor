@@ -1,0 +1,4 @@
+def currency(x):
+    """if you don't understand this why are you here its one line... it formats the currency im perplexed as to why you are reading this line despite you already knowing what it does... just read the literal one line of documentation if you must"""
+    # literally just ads a $ at the start and formats it to 2 dp
+    return "${:.2f}".format(x)
