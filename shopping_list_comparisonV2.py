@@ -80,8 +80,13 @@ def weight_conv(weight):
         weight = float(weight)
     return weight
 
-def scorer(cost,weight,rating,rating_reviewers):
+def scorer(name):
     """creates a score based on cost and reviews"""
+    indexers = raw_name.index(name)
+    weight = raw_weight[indexers]
+    cost = raw_cost[indexers]
+    rating = raw_rating[indexers]
+    rating_reviewers = raw_review_num[indexers]
     cost = cost/weight
     rating = rating/rating_reviewers
     return round(((rating / (cost * (((cost + 5 - rating)) * 2))) * 100000),3)
@@ -118,14 +123,14 @@ raw_cost = []
 raw_weight = []
 raw_rating = []
 raw_review_num = []
+shop_score = []
 
 
 # the users custom shopping list
 shop_list = []
-sort_shop_list = []
+cost_list = []
 user_wallet = []
-shop_score = []
-sorted_shop_score = []
+sort_shop_list = []
 total = 0
 
 # the data from one specific item
@@ -285,25 +290,21 @@ else:
             raw_review_num.append(1)
             shop_list.append(item_name)
 
-# gets the users score
+
 for item in shop_list:
     indexer = raw_name.index(item)
-    item_weight = raw_weight[indexer]
-    item_cost = raw_cost[indexer]
-    item_rating = raw_rating[indexer]
-    item_review_num = raw_review_num[indexer]
-    shop_score.append(scorer(item_cost,item_weight,item_rating,item_review_num))
-
+    cost_list.append(raw_cost[indexer])
 # this orders the users score by height and orders the correlating items
 # sorts the shop score by itself
-sorted_shop_score = sorted(shop_score)
-for item in sorted_shop_score:
+sorted_cost_list = sorted(cost_list)
+for item in sorted_cost_list:
     # gets the original shop score index from the correlating sorted shop score
-    indexer = shop_score.index(item)
+    indexer = cost_list.index(item)
+    cost_list[indexer] = None
     # adds the item from the shop list that correlates with the original shop score to where the sorted shop score is
     sort_shop_list.append(shop_list[indexer])
 # polishes up and sets the items back to their common names
-shop_score = sorted_shop_score
+cost_list = sorted_cost_list
 shop_list = sort_shop_list
 total_cost = 0
 # prunes the list of lowest scoring items until the cost is within budget
@@ -313,15 +314,29 @@ for item in shop_list:
     total_cost += raw_cost[indexer]
 # runs until under budget
 while user_wallet < total_cost:
-    # removes the lowest scoring item from shop list and its score
-    shop_list.pop()
-    shop_score.pop()
+    # removes the highest costing
+    # checks if the lowest two values are similar enough relative to the user wallet
+    if (cost_list[-1] - cost_list[-2]) <= user_wallet/(len(cost_list)*3.5):
+        if scorer(shop_list[-1]) > scorer(shop_list[-2]):
+            shop_list.pop(-2)
+            cost_list.pop(-2)
+        else:
+            shop_list.pop()
+            cost_list.pop()
+    else:
+        shop_list.pop()
+        cost_list.pop()
     # reestablishes cost
     total_cost = 0
     for item in shop_list:
         indexer = raw_name.index(item)
         total_cost += raw_cost[indexer]
 the_costs = []
+
+# gets the users score
+for item in shop_list:
+    shop_score.append(scorer(item))
+
 # sets up for the dictionary by establishing variables
 for item in shop_list:
     indexer = raw_name.index(item)
