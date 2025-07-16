@@ -16,12 +16,12 @@ def string_checker(question,ans=["yes","no"]):
             print(F"sorry please answer with either {str(ans).strip('[]')}")
 
 
-def num_checker(question, type="float",max = ""):
+def num_checker(question, typeof="float", max =""):
     """this checks integers are above min value (0) and below either anything or five and also converts it to float or string to test.
     Do not fret that having a number as max will underline in yellow this is the computer thinking that it knows best, it is wrong of course"""
-    error = F"please enter a {type} that is above 0"
+    error = F"please enter a {typeof} that is above 0"
     if not max == "":
-        error+= F" and below {max}"
+        error+= F" and less than or equal to {max}"
 
     while True:
         value = input(question).strip("$")
@@ -31,9 +31,9 @@ def num_checker(question, type="float",max = ""):
 
 
         try:
-            if type == "float":
+            if typeof == "float":
                 value = float(value)
-            elif type == "int":
+            elif typeof == "int":
                 value = int(value)
             if max == "":
                 if value > 0:
@@ -89,7 +89,7 @@ def scorer(name):
     rating_reviewers = raw_review_num[indexers]
     cost = cost/weight
     rating = rating/rating_reviewers
-    return round(((rating / (cost * (((cost + 5 - rating)) * 2))) * 100000),3)
+    return round(((rating / (cost * ((cost + 5 - rating) * 2))) * 100000), 3)
 
 def new_data(name):
     """gets the user to add an item to the database (only gets name, weight and cost)"""
@@ -105,8 +105,6 @@ def we_found_the_item(name):
     index = raw_name.index(name)
     cost = raw_cost[index]
     weight = raw_weight[index]
-    rating = raw_rating[index]
-    review_num = raw_review_num[index]
     # continues if the data is true gets the user to correct it if false
     if not string_checker(
             F"excellent news we found {name} in our database we just wish to confirm that this data is correct \n"
@@ -223,7 +221,7 @@ while string_checker("would you like to support this app by reviewing a product 
         # shows the current rating
         print(F"thank you for taking your time to review {item_name} its current review is {round(item_rating/item_review_num,2)} out of 5")
         # nabs the review and increments
-        item_rating += num_checker("please enter your review ",type="int",max=5)
+        item_rating += num_checker("please enter your review ", typeof="int", max=5)
         item_review_num += 1
         raw_rating[indexer] = item_rating
         raw_review_num[indexer] = item_review_num
@@ -242,8 +240,9 @@ user_wallet = num_checker("please enter your budget ")
 # gets the users list
 if string_checker("do you want to put all the items in the list or would you prefer to list them one by one ",ans=["list","one by one"]):
     print("excellent choice... now this will be difficult you need to write each item with a comma between each item and ensure no spaces between ")
+
     full_list = input("ready... go ").replace("=","")
-    while full_list == "":
+    while full_list.strip(',') == "":
         full_list = input("please dont enter '=' or ',' or nothing")
     # this makes a list in the same way that the file reader does
     full_list = "," + full_list + "="
@@ -259,7 +258,7 @@ if string_checker("do you want to put all the items in the list or would you pre
                 t += 1
         # prevents the user from entering ,, as an option
         if not  temp_word == "":
-            shop_list.append(temp_word)
+            shop_list.append(temp_word.strip(" "))
         temp_word = ""
     for item in shop_list:
         if item in raw_name:
@@ -315,8 +314,8 @@ for item in shop_list:
 # runs until under budget
 while user_wallet < total_cost:
     # removes the highest costing
-    # checks if the lowest two values are similar enough relative to the user wallet
-    if (cost_list[-1] - cost_list[-2]) <= user_wallet/(len(cost_list)*3.5):
+    # checks if the lowest two values are similar enough relative to the user wallet and the length of the list
+    if len(cost_list)>1 and (cost_list[-1] - cost_list[-2]) <= user_wallet/((len(cost_list)*3.5)+0.1):
         if scorer(shop_list[-1]) > scorer(shop_list[-2]):
             shop_list.pop(-2)
             cost_list.pop(-2)
@@ -352,7 +351,7 @@ user_best_list = {
 
 }
 # if the list is empty (all items were pruned)
-if shop_list == []:
+if not shop_list:
     print("sorry we were unable to find an acceptable bargain for you budget")
 else:
     # prints the dataframe
