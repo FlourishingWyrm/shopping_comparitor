@@ -109,8 +109,8 @@ def we_found_the_item(name):
     if not string_checker(
             F"excellent news we found {name} in our database we just wish to confirm that this data is correct \n"
             F"is the cost of {name} is {currency(cost)} and {name} weighs {weight}kgs "):
-        raw_cost[indexer] = (num_checker("please enter the cost as a number ignoring the $ "))
-        raw_weight[indexer] = (
+        raw_cost[index] = (num_checker("please enter the cost as a number ignoring the $ "))
+        raw_weight[index] = (
             num_checker("please enter the weight if you ignore the units it will be assumed as (kg) "))
         print("The item has been updated")
 
@@ -315,7 +315,7 @@ for item in shop_list:
 while user_wallet < total_cost:
     # removes the highest costing
     # checks if the lowest two values are similar enough relative to the user wallet and the length of the list
-    if len(cost_list)>1 and (cost_list[-1] - cost_list[-2]) <= user_wallet/((len(cost_list)*3.5)+0.1):
+    if len(cost_list)>1 and (cost_list[-1] - cost_list[-2]) <= user_wallet/((len(cost_list)*1.5)+0.1):
         if scorer(shop_list[-1]) > scorer(shop_list[-2]):
             shop_list.pop(-2)
             cost_list.pop(-2)
